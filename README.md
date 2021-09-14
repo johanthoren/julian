@@ -29,6 +29,14 @@ Examples:
 ;; => 2459293.5
 ```
 
+A map, such as the one produced by `jdn->time` can be passed as an only
+argument to `time->jdn`:
+
+``` clojure
+(time->jdn {:year 2021 :month 6 :day 6 :hour 12 :minute 0 :second 0})
+;; => 2459372.0
+```
+
 ## Acknowledgements
 
 All calculations are based on the excellent [Astronomical
