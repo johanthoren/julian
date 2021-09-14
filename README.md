@@ -1,9 +1,9 @@
 # xyz.thoren/julian
 
 A Clojure(Script) library designed to allow conversions between Julian Day
-Number and Gregorian Time.
+Number and common time.
 
-Julian Day Numbers are represented by a float, and Gregorian Time is represented
+Julian Day Numbers are represented by a float, and Time is represented
 by a map containing the keys `:year`, `:month`, `:day`, `:hour`, `:minute`, and
 `:second`.
 
@@ -14,24 +14,24 @@ by a map containing the keys `:year`, `:month`, `:day`, `:hour`, `:minute`, and
 Require:
 
 ``` clojure
-(:require [xyz.thoren.julian :as jdn])
+(:require [xyz.thoren.julian :refer [jdn->time time->jdn]])
 ```
 
 Examples:
 
 ``` clojure
-(jdn/to-gregorian 2459293.5)
+(jdn->time 2459293.5)
 ;; => {:year 2021, :month 3, :day 20, :hour 0, :minute 0, :second 0}
 ```
 
 ``` clojure
-(jdn/to-julian :year 2021, :month 3, :day 20, :hour 0, :minute 0, :second 0)
+(time->jdn 2021 3 20)
 ;; => 2459293.5
 ```
 
 ## Acknowledgements
 
-All calculations are based on the excellent work [Astronomical
+All calculations are based on the excellent [Astronomical
 Algorithms](https://openlibrary.org/works/OL2009494W/Astronomical_algorithms) by
 [Jean Meeus](https://en.wikipedia.org/wiki/Jean_Meeus).
 

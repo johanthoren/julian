@@ -1,6 +1,6 @@
 (ns xyz.thoren.julian-test
   (:require [clojure.test :refer [deftest is testing]]
-            [xyz.thoren.julian :refer [to-gregorian to-julian]]))
+            [xyz.thoren.julian :refer [jdn->time time->jdn]]))
 
 (def jean-meeus-examples-p62
   [[2000 1 1 12 2451545.0]
@@ -32,25 +32,35 @@
 
 (defn- doseq-tests [f coll] (doseq [x coll] (apply f x)))
 
-(deftest convert-to-gregorian
+(deftest convert-jdn->time
   (let [t #(let [c (count %&)] (is (= {:year (first %&)
                                        :month (second %&)
                                        :day (nth %& 2)
                                        :hour (if (> c 4) (nth %& 3) 0)
                                        :minute (if (> c 5) (nth %& 4) 0)
                                        :second (if (> c 6) (nth %& 5) 0)}
-                                      (to-gregorian (last %&)))))]
+                                      (jdn->time (last %&)))))]
     (testing "the reverse examples from Jean Meeus Astronomical Algorithms p.62"
       (doseq-tests t jean-meeus-examples-p62))
     (testing "rounding"
       (doseq-tests t rounding-examples))))
 
-(deftest convert-to-julian
-  (let [t #(is (= (last %&) (apply to-julian (drop-last %&))))]
+(deftest convert-time->jdn
+  (let [t #(is (= (last %&) (apply time->jdn (drop-last %&))))]
     (testing "the examples from Jean Meeus Astronomical Algorithms p.62"
       (doseq-tests t jean-meeus-examples-p62))
     (testing "rounding"
-      (doseq-tests t rounding-examples))))
+      (doseq-tests t rounding-examples))
+    (testing "passing back the output from [[jdn->time]]"
+      (is (= 2459293.5 (time->jdn {:year 2021
+                                   :month 3
+                                   :day 20
+                                   :hour 0
+                                   :minute 0
+                                   :second 0})))
+      (doseq [e jean-meeus-examples-p62]
+        (let [f (last e)]
+          (is (= f (time->jdn (jdn->time f)))))))))
 
 (deftest test-five-decimal-float
   (testing "that numbers are correctly truncated"

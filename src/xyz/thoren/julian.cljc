@@ -9,9 +9,9 @@
   #?(:cljs (reader/read-string (gstring/format "%.5f" f))
      :clj (read-string (format "%.5f" f))))
 
-(defn to-gregorian
-  "Given a Julian Day Number `jdn`, return a map with the Gregorian time. Will
-  round `jdn` to 5 decimals."
+(defn jdn->time
+  "Given a Julian Day Number `jdn`, return a map with the corresponding time.
+  Will round `jdn` to 5 decimals."
   [jdn]
   {:pre [(number? jdn)]}
   (let [julian (+ 0.5 (five-decimal-float jdn))
@@ -52,14 +52,29 @@
      :minute minute
      :second second}))
 
-(defn to-julian
-  "Given 1-6 integers representing year, month, day, hour, minute, and second
-  return a Julian Day Number with 5 decimal precision."
-  ([year] (to-julian year 1 1 0 0 0))
-  ([year month] (to-julian year month 1 0 0 0))
-  ([year month day] (to-julian year month day 0 0 0))
-  ([year month day hour] (to-julian year month day hour 0 0))
-  ([year month day hour minute] (to-julian year month day hour minute 0))
+(defn- time-map?
+  [m]
+  (let [keys [:year :month :day :hour :minute :second]]
+    (if (and (map? m)
+             (= (count m) 6)
+             (empty? (remove int? (vals m)))
+             (every? #(contains? m %) keys))
+      true
+      false)))
+
+(defn time->jdn
+  "Given 1-6 integers representing year, month, day, hour, minute, and second,
+  or a map containing all of the keys :year, :month, :day, :hour, :minute, and
+  :second, with corresponding integer values, return a Julian Day Number with 5
+  decimal precision."
+  ([x] {:pre [(or (int? x) (time-map? x))]}
+   (if (int? x)
+     (time->jdn x 1 1 0 0 0)
+     (apply time->jdn (vals x))))
+  ([year month] (time->jdn year month 1 0 0 0))
+  ([year month day] (time->jdn year month day 0 0 0))
+  ([year month day hour] (time->jdn year month day hour 0 0))
+  ([year month day hour minute] (time->jdn year month day hour minute 0))
   ([year month day hour minute second]
    {:pre [(empty? (remove int? [year month day hour minute second]))]}
    (let [y (if (> month 2) year (dec year))
