@@ -53,20 +53,26 @@
      :second second}))
 
 (defn to-julian
-  "Given `:year`, `:month`, `:day`, `:hour`, `:minute`, `:second`, return a
-  Julian Day Number with 5 decimal precision."
-  [& {:keys [year month day hour minute second]}]
-  (let [y (if (> month 2) year (dec year))
-        m (if (> month 2) month (+ month 12))
-        a (int (Math/floor (/ y 100)))
-        b (if (or (> year 1582)
-                  (and (= year 1582) (> month 10))
-                  (and (= year 1582) (= month 10) (> day 14)))
-            (+ (- 2 a) (int (Math/floor (/ a 4))))
-            0)
-        c (- b 1524.5)
-        x (int (Math/floor (* 365.25 (+ y 4716))))
-        z (int (Math/floor (* 30.6001 (inc m))))
-        f (+ second (* minute 60) (* hour 3600))
-        d (+ (float day) (if (zero? f) 0 (/ f 86400)))]
-    (five-decimal-float (+ x z c d))))
+  "Given 1-6 integers representing year, month, day, hour, minute, and second
+  return a Julian Day Number with 5 decimal precision."
+  ([year] (to-julian year 1 1 0 0 0))
+  ([year month] (to-julian year month 1 0 0 0))
+  ([year month day] (to-julian year month day 0 0 0))
+  ([year month day hour] (to-julian year month day hour 0 0))
+  ([year month day hour minute] (to-julian year month day hour minute 0))
+  ([year month day hour minute second]
+   {:pre [(empty? (remove int? [year month day hour minute second]))]}
+   (let [y (if (> month 2) year (dec year))
+         m (if (> month 2) month (+ month 12))
+         a (int (Math/floor (/ y 100)))
+         b (if (or (> year 1582)
+                   (and (= year 1582) (> month 10))
+                   (and (= year 1582) (= month 10) (> day 14)))
+             (+ (- 2 a) (int (Math/floor (/ a 4))))
+             0)
+         c (- b 1524.5)
+         x (int (Math/floor (* 365.25 (+ y 4716))))
+         z (int (Math/floor (* 30.6001 (inc m))))
+         f (+ second (* minute 60) (* hour 3600))
+         d (+ (float day) (if (zero? f) 0 (/ f 86400)))]
+     (five-decimal-float (+ x z c d)))))

@@ -1,4 +1,4 @@
-(defproject xyz.thoren/julian "0.1.1-SNAPSHOT"
+(defproject xyz.thoren/julian "1.0.0-SNAPSHOT"
   :description "Convert between Julian and Gregorian days."
   :url "https://github.com/johanthoren/julian"
   :license {:name "ISC"
@@ -11,6 +11,7 @@
                  [org.clojure/clojurescript "1.10.879"]]
   :repl-options {:init-ns xyz.thoren.julian
                  :nrepl-middleware [cider.piggieback/wrap-cljs-repl]}
+  :profiles {:dev {:dependencies [[cider/piggieback "0.4.2"]]}}
   :repositories [["releases" {:url "https://repo.clojars.org"
                               :creds :gpg}]]
   :release-tasks [["test"]
@@ -21,5 +22,4 @@
                   ["deploy"]
                   ["change" "version" "leiningen.release/bump-version"]
                   ["vcs" "commit"]
-                  ["vcs" "push"]]
-  :profiles {:dev {:dependencies [[cider/piggieback "0.4.2"]]}})
+                  ["vcs" "push"]])
