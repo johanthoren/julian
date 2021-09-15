@@ -17,13 +17,15 @@ Require:
 (:require [xyz.thoren.julian :refer [jdn->time time->jdn]])
 ```
 
-Examples:
+### Examples:
 
+`jdn->time` takes a single float as argument.
 ``` clojure
 (jdn->time 2459293.5)
 ;; => {:year 2021, :month 3, :day 20, :hour 0, :minute 0, :second 0}
 ```
 
+`time->jdn` accepts between 1 and 6 integer arguments.
 ``` clojure
 (time->jdn 2021 3 20)
 ;; => 2459293.5
