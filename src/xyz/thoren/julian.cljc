@@ -32,8 +32,8 @@
                (- c 4716)
                (- c 4715))
         day-with-decimal (->> (* 30.6001 e)
-                              (Math/floor)
-                              (int)
+                              Math/floor
+                              int
                               (- b d)
                               (+ f))
         day (int (Math/floor day-with-decimal))
