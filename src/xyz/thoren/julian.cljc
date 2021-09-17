@@ -13,7 +13,7 @@
   "Given a Julian Day Number `jdn`, return a map with the corresponding time.
   Will round `jdn` to 5 decimals."
   [jdn]
-  {:pre [(number? jdn)]}
+  {:pre [(float? jdn)]}
   (let [julian (+ 0.5 (five-decimal-float jdn))
         z (int (Math/floor julian))
         f (- julian (int (Math/floor julian)))
