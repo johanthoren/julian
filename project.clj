@@ -1,4 +1,4 @@
-(defproject xyz.thoren/julian "1.0.1"
+(defproject xyz.thoren/julian "1.0.2-SNAPSHOT"
   :description "Convert between Julian and Gregorian days."
   :url "https://github.com/johanthoren/julian"
   :license {:name "ISC"
